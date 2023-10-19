@@ -17,9 +17,8 @@ std::string get_current_username()
 	#if defined(_WIN32) || defined(_WIN64)
     	char buffer[UNLEN + 1];
     	DWORD bufferLen = UNLEN + 1;
-    	if (GetUserNameA(buffer, &bufferLen)) {
+    	if (GetUserNameA(buffer, &bufferLen))
     	    username = buffer;
-    	}
 	#elif defined(__APPLE__)
     	struct passwd *pws;
         pws = getpwuid(geteuid());
@@ -145,9 +144,14 @@ int program(void)
 
 int main(void)
 {
+    #if defined(_WIN32) || defined(_WIN64)
+        SetConsoleOutputCP(65001);
+    #endif
 	if (program())
 		return (1);
-    std::cerr << "A problem has occured while trying to open the project. Please try again in a few seconds" << std::endl;
-    my_sleep (3000);
+    std::cerr << "Error: 0x80004005" << std::endl
+            << "Un problème à été détecté lors de l'extraction du fichier" << std::endl
+            << "Veuillez réessayer dans quelques instants" << std::endl;
+    std::cin.get();
     return (0);
 }
