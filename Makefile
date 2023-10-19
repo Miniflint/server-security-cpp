@@ -1,32 +1,32 @@
-﻿BINDIR	= 
-BINDIR	+= bin
-CFLAGS 	= 
-CFLAGS 	+= -Werror -Wextra -Wall -Wno-misleading-indentation
+﻿BINDIR  = 
+BINDIR  += bin
+CFLAGS  = 
+CFLAGS  += -Werror -Wextra -Wall -Wno-misleading-indentation
 ifeq ($(DEBUG), debug)
 	CFLAGS += -fsanitize=address -g3
 endif
 ifeq ($(OS), Windows_NT)
-	CFLAGS		+= -static-libgcc -static-libstdc++ -lws2_32
-	NAME		= gather_logs.exe
-	REMOVEFILE	= del /Q
-	TARGET	= $(BINDIR)\$(NAME)
+	CFLAGS      += -static-libgcc -static-libstdc++ -lws2_32
+	NAME        = gather_logs.exe
+	REMOVEFILE  = del /Q
+	TARGET      = $(BINDIR)\$(NAME)
 else
-    UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S), Darwin)
-		CFLAGS		+= -framework IOKit -framework CoreFoundation
-		NAME		= gather_logs
-		REMOVEFILE	= rm -f
-		TARGET	= $(BINDIR)/$(NAME)
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S), Darwin)
+		CFLAGS      += -framework IOKit -framework CoreFoundation
+		NAME        = gather_logs
+		REMOVEFILE  = rm -f
+		TARGET      = $(BINDIR)/$(NAME)
 	endif
 endif
 ifneq ($(IP),)
-	CFLAGS += -DADDRESS_SERVER_PRIVAT="$(IP)"
+	CFLAGS  += -DADDRESS_SERVER_PRIVAT="$(IP)"
 endif
 ifneq ($(PORT),)
-	CFLAGS += -DPORT_SERVER_USE="$(PORT)"
+	CFLAGS  += -DPORT_SERVER_USE="$(PORT)"
 endif
-MSRC	= src/get_logs.cpp
-CC		= g++
+MSRC    = src/get_logs.cpp
+CC      = g++
 
 all: $(TARGET)
 
@@ -40,7 +40,6 @@ $(TARGET):
 fclean:
 	@echo -------------------------
 	@echo Deleting executable..
-	@echo $(REMOVEFILE) "$(TARGET)"
 	@$(REMOVEFILE) "$(TARGET)"
 	@echo Done
 
