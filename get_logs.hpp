@@ -14,6 +14,7 @@
 #  include <cstdlib>
 #  include <IOKit/IOKitLib.h>
 #  include <pwd.h>
+#  include <unistd.h>
 #  ifndef ISWINDOWS
 #   define ISWINDOWS 0
 #  endif
@@ -23,7 +24,6 @@
 # include <time.h>
 # include <iostream>
 # include <fstream>
-# include <unistd.h>
 # include <typeinfo>
 
 // USEFUL

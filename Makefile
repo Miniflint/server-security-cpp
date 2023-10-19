@@ -4,7 +4,7 @@ ifeq ($(DEBUG), debug)
 	CFLAGS += -fsanitize=address -g3
 endif
 ifeq ($(OS), Windows_NT)
-	CFLAGS		+= -lws2_32 -static-libstdc++ -static-libgcc
+	CFLAGS		+= -static-libgcc -static-libstdc++ -lws2_32
 	NAME		= gather_logs.exe
 	REMOVEFILE	= del
 else
