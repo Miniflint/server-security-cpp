@@ -1,0 +1,12 @@
+﻿#ifndef GET_LOGS_DEFINE_HPP
+# define GET_LOGS_DEFINE_HPP
+
+# ifndef ADDRESS_SERVER_PRIVAT
+#  define ADDRESS_SERVER_PRIVAT 192.168.1.245
+# endif
+
+# ifndef PORT_SERVER_USE
+#  define PORT_SERVER_USE 8000
+# endif
+
+#endif
