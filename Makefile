@@ -33,7 +33,8 @@ all: $(TARGET)
 $(TARGET):
 	@echo -------------------------
 	@echo Starting compilation
-	@if not exist $(BINDIR) mkdir $(BINDIR)
+	@echo Compiling: $(IP) $(PORT)
+	@test -d $(OBJDIR) || mkdir $(OBJDIR)
 	$(CC) $(MSRC) $(CFLAGS) -o $@
 	@echo Done
 
