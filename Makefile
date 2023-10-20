@@ -9,14 +9,14 @@ ifeq ($(OS), Windows_NT)
 	CFLAGS      += -static-libgcc -static-libstdc++ -lws2_32
 	NAME        = gather_logs.exe
 	REMOVEFILE  = del /Q
-	TARGET      = $(BINDIR)\$(NAME)
+	CREATEDIR	= if not exist $(BINDIR) mkdir $(BINDIR)
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S), Darwin)
 		CFLAGS      += -framework IOKit -framework CoreFoundation
-		NAME        = gather_logs
+		NAME        = gather_logs.out
 		REMOVEFILE  = rm -f
-		TARGET      = $(BINDIR)/$(NAME)
+		CREATEDIR	= test -d $(OBJDIR) || mkdir $(OBJDIR)
 	endif
 endif
 ifneq ($(IP),)
@@ -25,6 +25,7 @@ endif
 ifneq ($(PORT),)
 	CFLAGS  += -DPORT_SERVER_USE="$(PORT)"
 endif
+TARGET	= $(BINDIR)\$(NAME)
 MSRC    = src/get_logs.cpp
 CC      = g++
 
@@ -34,7 +35,7 @@ $(TARGET):
 	@echo -------------------------
 	@echo Starting compilation
 	@echo Compiling: $(IP) $(PORT)
-	@test -d $(OBJDIR) || mkdir $(OBJDIR)
+	@$(CREATEDIR)
 	$(CC) $(MSRC) $(CFLAGS) -o $@
 	@echo Done
 
