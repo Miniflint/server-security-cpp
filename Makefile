@@ -43,19 +43,23 @@ TARGET	= $(BINDIR)/$(NAME)
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
+$(TARGET): $(OBJS) | $(BINDIR)
 	@echo -------------------------
 	@echo Starting compilation
-	@$(CREATEBIN)
 	@$(CC) $(OBJS) $(DFLAGS) -o $@ $(CFLAGS)
 	@echo Done
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
 	@echo -------------------------
 	@echo Creating objects files
-	@$(CREATEOBJ)
 	@$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@
 	@echo Done
+
+$(OBJDIR):
+	@$(CREATEOBJ)
+
+$(BINDIR):
+	@$(CREATEBIN)
 
 clean:
 	@echo -------------------------
@@ -66,7 +70,7 @@ clean:
 fclean: clean
 	@echo -------------------------
 	@echo Deleting executable..
-	@$(REMOVEFILE) $(BINDIR)
+	$(REMOVEFILE) $(BINDIR)
 	@echo Done
 
 re: fclean all
