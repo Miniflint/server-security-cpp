@@ -1,52 +1,74 @@
-﻿BINDIR  = 
-BINDIR  += bin
-CFLAGS  = 
-CFLAGS  += -Werror -Wextra -Wall -Wno-misleading-indentation
+﻿CFLAGS	= 
+DFLAGS	=
 ifeq ($(DEBUG), debug)
 	CFLAGS += -fsanitize=address -g3
 endif
 ifeq ($(OS), Windows_NT)
-	CFLAGS      += -static-libgcc -static-libstdc++ -lws2_32
-	NAME        = gather_logs.exe
-	REMOVEFILE  = del /Q
-	CREATEDIR	= if not exist $(BINDIR) mkdir $(BINDIR)
+	CFLAGS		= -static-libgcc -static-libstdc++ -lws2_32
+	NAME		= gather_logs.exe
+	REMOVEFILE 	= del /f /q
+	BINDIR		= bin
+	OBJDIR		= objects
+	CREATEBIN	= if not exist $(BINDIR) mkdir $(BINDIR)
+	CREATEOBJ	= if not exist $(OBJDIR) mkdir $(OBJDIR)
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S), Darwin)
-		CFLAGS      += -framework IOKit -framework CoreFoundation
-		NAME        = gather_logs.out
-		REMOVEFILE  = rm -f
-		CREATEDIR	= test -d $(OBJDIR) || mkdir $(OBJDIR)
+		CFLAGS		= -framework IOKit -framework CoreFoundation
+		NAME		= gather_logs.out
+		REMOVEFILE 	= rm -rf
+		BINDIR		= bin
+		OBJDIR		= objects
+		CREATEBIN	= test -d $(BINDIR) || mkdir $(BINDIR)
+		CREATEOBJ	= test -d $(OBJDIR) || mkdir $(OBJDIR)
 	else
-    	$(error Your OS is not supported by this application yet $(UNAME_S).)
+		$(error Your OS is not supported by this application yet $(UNAME_S).)
 	endif
 endif
 ifneq ($(IP),)
-	CFLAGS  += -DADDRESS_SERVER_PRIVAT="$(IP)"
+    $(info Compiling with: $(IP).)
+	DFLAGS  += -DADDRESS_SERVER_PRIVAT="$(IP)"
 endif
 ifneq ($(PORT),)
-	CFLAGS  += -DPORT_SERVER_USE="$(PORT)"
+    $(info Compiling with: $(PORT).)
+	DFLAGS  += -DPORT_SERVER_USE="$(PORT)"
 endif
-TARGET	= $(BINDIR)\$(NAME)
-MSRC    = src/get_logs.cpp
-CC      = g++
+
+CC		= g++
+FLAGS	= -Werror -Wextra -Wall -Wno-misleading-indentation
+SRCDIR	= src
+MSRC	= $(SRCDIR)/get_logs.cpp
+OBJS	= $(strip $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o, $(MSRC)))
+TARGET	= $(BINDIR)/$(NAME)
 
 all: $(TARGET)
 
-$(TARGET):
+$(TARGET): $(OBJS)
 	@echo -------------------------
 	@echo Starting compilation
-	@echo Compiling: $(IP) $(PORT)
-	@$(CREATEDIR)
-	$(CC) $(MSRC) $(CFLAGS) -o $@
+	@$(CREATEBIN)
+	@$(CC) $(OBJS) $(DFLAGS) -o $@ $(CFLAGS)
 	@echo Done
 
-fclean:
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@echo -------------------------
+	@echo Creating objects files
+	@$(CREATEOBJ)
+	@$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@
+	@echo Done
+
+clean:
+	@echo -------------------------
+	@echo Deleting objects files..
+	@$(REMOVEFILE) $(OBJDIR)
+	@echo Done	
+
+fclean: clean
 	@echo -------------------------
 	@echo Deleting executable..
-	@$(REMOVEFILE) "$(TARGET)"
+	@$(REMOVEFILE) $(BINDIR)
 	@echo Done
 
 re: fclean all
 
-.PHONY:	fclean all re
+.PHONY:	 all re clean fclean
