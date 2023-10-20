@@ -17,6 +17,8 @@ else
 		NAME        = gather_logs.out
 		REMOVEFILE  = rm -f
 		CREATEDIR	= test -d $(OBJDIR) || mkdir $(OBJDIR)
+	else
+    	$(error Your OS is not supported by this application yet $(UNAME_S).)
 	endif
 endif
 ifneq ($(IP),)
