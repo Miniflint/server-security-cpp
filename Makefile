@@ -70,7 +70,7 @@ clean:
 fclean: clean
 	@echo -------------------------
 	@echo Deleting executable..
-	$(REMOVEFILE) $(BINDIR)
+	@$(REMOVEFILE) $(BINDIR)
 	@echo Done
 
 re: fclean all
