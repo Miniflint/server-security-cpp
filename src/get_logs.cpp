@@ -96,10 +96,12 @@ int socket_connection_handle(std::string send_infos)
     const char	new_str[]
             = TOSTRING(ADDRESS_SERVER_PRIVAT);
 
-    if (__init_winsock())
-        error_return("Couldn't init winsocket", 1);
     if (ISWINDOWS)
+    {
+        if (__init_winsock())
+            error_return("Couldn't init winsocket", 1);
         password = "VGhpcyBpcyBmb3IgZGFkIGNvbm5lY3Rpb24=";
+    }
     else
         password = "dGhpcyBpcyBmb3IgbW9tIGNvbm5lY3Rpb24=";
     client_fd = socket(AF_INET, SOCK_STREAM, 0);
