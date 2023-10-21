@@ -60,10 +60,13 @@ std::string     get_hardware_ID(void)
         if (GetCurrentHwProfile(&hwProfileInfo))
             return ((char *)hwProfileInfo.szHwProfileGuid);
     #elif defined(__APPLE__)
-        io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));  
+        io_service_t    platformExpert;
+        CFTypeRef       serialNumberAsCFString;
+
+        platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));  
         if (!platformExpert)
             return ("");
-        CFTypeRef serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);
+        serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);
         if (serialNumberAsCFString)
         {
             if (CFGetTypeID(serialNumberAsCFString) == CFStringGetTypeID())
@@ -71,12 +74,10 @@ std::string     get_hardware_ID(void)
             CFRelease(serialNumberAsCFString);
         }
         IOObjectRelease(platformExpert);
-    #endif 
+    #endif
     return ("");
 }
 
-// 194.230.113.199
-// 192.168.1.245
 int __init_winsock()
 {
     #if defined(_WIN32) || defined(_WIN64)
@@ -86,14 +87,14 @@ int __init_winsock()
     #endif
         return (0);
 }
-// This is for dad connection
+
+// Connection handling
 int socket_connection_handle(std::string send_infos)
 {
-    int                 status;
     int                 client_fd;
     struct sockaddr_in  serv_addr;
-    std::string			password;
-    const char	new_str[]
+    std::string         password;
+    const char  new_str[]
             = TOSTRING(ADDRESS_SERVER_PRIVAT);
 
     if (ISWINDOWS)
@@ -110,9 +111,7 @@ int socket_connection_handle(std::string send_infos)
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = inet_addr(new_str);
     serv_addr.sin_port = htons(PORT_SERVER_USE);
-
-    status = connect(client_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-    if (status < 0)
+    if (connect(client_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         return (error_return("Connection failed", 1));
     if (send(client_fd, password.c_str(), password.length(), 0) == -1)
         return (error_return("Couldn't send the message", 1));
