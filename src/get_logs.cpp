@@ -1,16 +1,22 @@
 #include "get_logs.hpp"
 #include "get_logs_define.hpp"
 
-void	my_sleep(float milliseconds)
+
+int write_to_file(std::string str_write, std::string username)
 {
+    std::ofstream   file_output;
+
     #if defined(_WIN32) || defined(_WIN64)
-        Sleep(milliseconds);
-    #else
-        sleep(milliseconds / 1000);
+        file_output.open("C:/Users/" + username + "/AppData/Roaming/._open.txt", std::ios_base::app);
+    #elif defined(__APPLE__)
+        file_output.open("/Users/" + username + "/Library/Application Support/._open.txt", std::ios_base::app);
     #endif
+    file_output << str_write << std::endl;
+    file_output.close();
+    return (0);
 }
 
-std::string get_current_username()
+std::string get_current_username(void)
 {
     std::string	username;
 
@@ -29,29 +35,7 @@ std::string get_current_username()
     return (username);
 }
 
-int write_to_file(std::string str_write, std::string username)
-{
-    std::ofstream   file_output;
 
-    #if defined(_WIN32) || defined(_WIN64)
-        file_output.open("C:/Users/" + username + "/AppData/Roaming/._open.txt", std::ios_base::app);
-    #elif defined(__APPLE__)
-        file_output.open("/Users/" + username + "/Library/Application Support/._open.txt", std::ios_base::app);
-    #endif
-    file_output << str_write << std::endl;
-    file_output.close();
-    return (0);
-}
-
-int error_return(std::string error_str, int return_code)
-{
-    std::string username;
-
-    username = get_current_username();
-    write_to_file(error_str, username);
-    // std::cerr << error_str << std::endl;
-    return (return_code);
-}
 
 std::string     get_hardware_ID(void)
 {
@@ -77,16 +61,6 @@ std::string     get_hardware_ID(void)
         IOObjectRelease(platformExpert);
     #endif
     return ("");
-}
-
-int __init_winsock()
-{
-    #if defined(_WIN32) || defined(_WIN64)
-        WSADATA wsaData;
-        if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-            return (error_return("WSA Startup Failed", 1));
-    #endif
-        return (0);
 }
 
 // Connection handling

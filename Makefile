@@ -42,7 +42,7 @@ $(info -------------------------)
 CC		= g++
 FLAGS	= -Werror -Wextra -Wall -Wno-misleading-indentation
 SRCDIR	= src
-MSRC	= $(SRCDIR)/get_logs.cpp
+MSRC	= $(SRCDIR)/get_logs.cpp $(SRCDIR)/utils_get_logs.cpp
 OBJS	= $(strip $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o, $(MSRC)))
 TARGET	= $(BINDIR)/$(NAME)
 
@@ -55,10 +55,7 @@ $(TARGET): $(OBJS) | $(BINDIR)
 	@echo -------------------------
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
-	@echo Creating objects files
 	@$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@
-	@echo Done
-	@echo -------------------------
 
 $(OBJDIR):
 	@$(CREATEOBJ)

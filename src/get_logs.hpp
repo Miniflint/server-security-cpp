@@ -30,4 +30,11 @@
 #define VAL(str) #str
 #define TOSTRING(str) VAL(str)
 
+// functions
+int         __init_winsock(void);
+std::string get_current_username(void);
+void	    my_sleep(float milliseconds);
+int         error_return(std::string error_str, int return_code);
+int         write_to_file(std::string str_write, std::string username);
+
 #endif
