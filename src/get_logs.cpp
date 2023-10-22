@@ -1,7 +1,7 @@
 #include "get_logs.hpp"
 #include "get_logs_define.hpp"
 
-void	my_sleep(unsigned short milliseconds)
+void	my_sleep(float milliseconds)
 {
     #if defined(_WIN32) || defined(_WIN64)
         Sleep(milliseconds);
@@ -15,8 +15,9 @@ std::string get_current_username()
     std::string	username;
 
     #if defined(_WIN32) || defined(_WIN64)
+        DWORD bufferLen;
         char buffer[UNLEN + 1];
-        DWORD bufferLen = UNLEN + 1;
+        bufferLen = UNLEN + 1;
         if (GetUserNameA(buffer, &bufferLen))
             username = buffer;
     #elif defined(__APPLE__)
@@ -48,7 +49,7 @@ int error_return(std::string error_str, int return_code)
 
     username = get_current_username();
     write_to_file(error_str, username);
-    std::cerr << error_str << std::endl;
+    // std::cerr << error_str << std::endl;
     return (return_code);
 }
 
