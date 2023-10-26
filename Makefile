@@ -21,6 +21,9 @@ else
 		OBJDIR		= objects
 		CREATEBIN	= test -d $(BINDIR) || mkdir $(BINDIR)
 		CREATEOBJ	= test -d $(OBJDIR) || mkdir $(OBJDIR)
+		ifeq ($(DEBUG), debug)
+			DFLAGS += -fsanitize=address -g3
+		endif
 	else
 		$(error Your OS is not supported by this application yet $(UNAME_S).)
 	endif
@@ -32,9 +35,6 @@ endif
 ifneq ($(PORT),)
     $(info Compiling with: PORT=$(PORT))
 	DFLAGS  += -DPORT_SERVER_USE="$(PORT)"
-endif
-ifeq ($(DEBUG), debug)
-	CFLAGS += -fsanitize=address -g3
 endif
 
 $(info -------------------------)
@@ -50,12 +50,12 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS) | $(BINDIR)
 	@echo Starting compilation
-	@$(CC) $(OBJS) $(DFLAGS) -o $@ $(CFLAGS)
+	$(CC) $(OBJS) $(DFLAGS) -o $@ $(CFLAGS)
 	@echo Done
 	@echo -------------------------
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
-	@$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@
+	$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@ 
 
 $(OBJDIR):
 	@$(CREATEOBJ)
