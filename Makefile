@@ -16,7 +16,7 @@ else
     	$(info Target set to MACOS.)
 		CFLAGS		= -framework IOKit -framework CoreFoundation
 		NAME		= gather_logs.out
-		REMOVEFILE 	= rm -f
+		REMOVEFILE 	= rm -rf
 		BINDIR		= bin
 		OBJDIR		= objects
 		CREATEBIN	= test -d $(BINDIR) || mkdir $(BINDIR)
