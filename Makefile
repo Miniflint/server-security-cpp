@@ -26,11 +26,11 @@ else
 	endif
 endif
 ifneq ($(IP),)
-    $(info Compiling with: IP=$(IP).)
+    $(info Compiling with: IP=$(IP))
 	DFLAGS  += -DADDRESS_SERVER_PRIVAT="$(IP)"
 endif
 ifneq ($(PORT),)
-    $(info Compiling with: PORT=$(PORT).)
+    $(info Compiling with: PORT=$(PORT))
 	DFLAGS  += -DPORT_SERVER_USE="$(PORT)"
 endif
 ifeq ($(DEBUG), debug)
