@@ -50,12 +50,12 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS) | $(BINDIR)
 	@echo Starting compilation
-	$(CC) $(OBJS) $(DFLAGS) -o $@ $(CFLAGS)
+	@$(CC) $(OBJS) $(DFLAGS) -o $@ $(CFLAGS)
 	@echo Done
 	@echo -------------------------
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
-	$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@ 
+	@$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@ 
 
 $(OBJDIR):
 	@$(CREATEOBJ)
