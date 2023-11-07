@@ -21,6 +21,21 @@ void	my_sleep(float milliseconds)
     #endif
 }
 
+
+std::string get_program_name(std::string input)
+{
+    size_t  lastBackslashPos;
+    size_t  lastSlashPos;
+
+    lastBackslashPos = input.find_last_of('\\');
+    lastSlashPos = input.find_last_of('/');
+    if (lastBackslashPos != std::string::npos || lastSlashPos != std::string::npos) {
+        return input.substr(lastBackslashPos + 1);
+    } else {
+        return input;
+    }
+}
+
 int error_return(std::string error_str, int return_code)
 {
     std::string username;

