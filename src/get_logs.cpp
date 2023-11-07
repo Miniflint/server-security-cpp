@@ -48,7 +48,7 @@ std::string     get_hardware_ID(void)
         io_service_t    platformExpert;
         CFTypeRef       serialNumberAsCFString;
 
-        platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));  
+        platformExpert = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("IOPlatformExpertDevice"));  
         if (!platformExpert)
             return ("");
         serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);

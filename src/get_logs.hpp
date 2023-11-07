@@ -15,6 +15,9 @@
 #  include <IOKit/IOKitLib.h>
 #  include <pwd.h>
 #  include <unistd.h>
+#  if (MAC_OS_X_VERSION_MAX_ALLOWED < 120000) // Before macOS 12 Monterey
+#   define kIOMainPortDefault kIOMasterPortDefault
+#  endif
 #  ifndef ISWINDOWS
 #   define ISWINDOWS 0
 #  endif
